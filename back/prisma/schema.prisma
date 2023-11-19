@@ -15,7 +15,8 @@ datasource db {
 model User {
   id             String  @id @default(uuid())
   email          String  @unique
-  password       String 
+  password       String
+  name           String
   isActivated    Boolean @default(false)
   activationLink String
   token          Token?
@@ -26,4 +27,9 @@ model Token {
   userId       String  @unique    
   refreshToken String  @db.Text  
   user         User    @relation(fields: [userId], references: [id])
+}
+
+model ConfirmCode {
+  id          String @id @default(uuid())
+  confirmCode Int 
 }

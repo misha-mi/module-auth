@@ -11,9 +11,11 @@ router.post(
   userController.registration,
 );
 router.post('/login', userController.login);
+router.post('/confirm', userController.confirmAccess);
 router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh); // не протестирована
 router.get('/users', authMiddleware, userController.getUsers);
+router.get('/user', authMiddleware, userController.getUser);
 
 module.exports = router;

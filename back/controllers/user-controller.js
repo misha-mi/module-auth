@@ -10,8 +10,8 @@ class UserController {
       if (!errorsValidation.isEmpty()) {
         return next(ApiError.BadRequest('Ошибка при валидации', errorsValidation.array()));
       }
-      const { email, password } = req.body;
-      const userData = await userService.registraion(email, password);
+      const { email, password, name } = req.body;
+      const userData = await userService.registraion(email, password, name);
       res.cookie('refreshToken', userData.refreshToken, {
         // + флаг secure
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -27,6 +27,16 @@ class UserController {
     try {
       const { email, password } = req.body;
       const userData = await userService.login(email, password);
+      return res.json(userData);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async confirmAccess(req, res, next) {
+    try {
+      const { code, userId, confirmId } = req.body;
+      const userData = await userService.confirmAccessByEmaill(confirmId, code, userId);
       res.cookie('refreshToken', userData.refreshToken, {
         // + флаг secure
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -79,6 +89,18 @@ class UserController {
     try {
       const users = await userService.getAllUsers();
       return res.json(users);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getUser(req, res, next) {
+    try {
+      const authorizationHeader = req.headers.authorization;
+      const accessToken = authorizationHeader.split(' ')[1];
+      const id = JSON.parse(atob(accessToken.split('.')[1])).id;
+      const user = await userService.getUser(id);
+      return res.json(user);
     } catch (e) {
       next(e);
     }

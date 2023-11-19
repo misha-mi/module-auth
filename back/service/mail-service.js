@@ -15,7 +15,6 @@ class MailService {
   }
 
   async sendActivateionMail(to, link) {
-    console.log(process.env.SMTP_USER, process.env.SMTP_PASSWORD, process.env.SMTP_HOST);
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,
@@ -28,6 +27,23 @@ class MailService {
         </div>
       `,
     });
+  }
+
+  async sendConfirmCode(to, code) {
+    await this.transporter
+      .sendMail({
+        from: process.env.SMTP_USER,
+        to,
+        subject: `Подтверждения входа ${process.env.API_URL}`,
+        text: '',
+        html: `
+        <div>
+          <h1></h1>
+          <div>Код активации: ${code}</div>
+        </div>
+      `,
+      })
+      .then(console.log);
   }
 }
 

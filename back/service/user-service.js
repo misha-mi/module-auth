@@ -9,7 +9,7 @@ const ApiError = require('../exceptions/api-error');
 const client = new PrismaClient();
 
 class UserService {
-  async registraion(email, password) {
+  async registraion(email, password, name) {
     const condidate = await client.user.findFirst({ where: { email } });
     if (condidate) {
       throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует!`);
@@ -18,7 +18,7 @@ class UserService {
     const activationLink = uuid.v4();
 
     const user = await client.user.create({
-      data: { email, password: hashPassword, activationLink },
+      data: { email, password: hashPassword, activationLink, name },
     });
     await mailService.sendActivateionMail(
       email,
@@ -26,11 +26,10 @@ class UserService {
     );
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens({ ...userDto });
+    // const tokens = tokenService.generateTokens({ ...userDto });
 
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    // await tokenService.saveToken(userDto.id, tokens.refreshToken);
     return {
-      ...tokens,
       user: userDto,
     };
   }
@@ -55,7 +54,45 @@ class UserService {
     if (!isPasswordEquals) {
       throw ApiError.BadRequest('Некорректный пароль');
     }
+
+    if (!user.isActivated) {
+      throw ApiError.BadRequest('Email не подтвержден');
+    }
+
+    const randomCode = Math.round(Math.random() * (999999 - 100001) + 100000);
+    const confirmData = await client.confirmCode.create({ data: { confirmCode: randomCode } });
+    await mailService.sendConfirmCode(user.email, randomCode);
+
+    return {
+      confirmId: confirmData.id,
+      userId: user.id,
+    };
+
+    // const tokens = tokenService.generateTokens({ ...userDto });
+
+    // await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    // return {
+    //   ...tokens,
+    //   user: userDto,
+    // };
+  }
+
+  async confirmAccessByEmaill(id, code, userId) {
+    const confrim = await client.confirmCode.findFirst({ where: { id } });
+
+    if (!confrim) {
+      throw ApiError.BadRequest('Неправильный запрос');
+    }
+
+    if (confrim.confirmCode != code) {
+      throw ApiError.BadRequest('Неверный код подтверждения');
+    }
+
+    await client.confirmCode.delete({ where: { id } });
+    const user = await client.user.findFirst({ where: { id: userId } });
+
     const userDto = new UserDto(user);
+
     const tokens = tokenService.generateTokens({ ...userDto });
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -95,6 +132,13 @@ class UserService {
   async getAllUsers() {
     const users = await client.user.findMany();
     return users;
+  }
+
+  async getUser(id) {
+    const user = await client.user.findFirst({
+      where: { id },
+    });
+    return user;
   }
 }
 
