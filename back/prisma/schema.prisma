@@ -20,6 +20,9 @@ model User {
   isActivated    Boolean @default(false)
   activationLink String
   token          Token?
+  chat1          Chat[] @relation("user1")
+  chat2          Chat[] @relation("user2")
+  messages       Message[]
 }
 
 model Token {
@@ -32,4 +35,23 @@ model Token {
 model ConfirmCode {
   id          String @id @default(uuid())
   confirmCode Int 
+}
+
+model Chat {
+  id           String @id @default(uuid())
+  firstUserId  String 
+  secondUserId String
+  user1        User    @relation("user1" ,fields: [firstUserId], references: [id])
+  user2        User    @relation("user2" ,fields: [secondUserId], references: [id])
+  messages     Message[]
+}
+
+model Message {
+  id       Int   @id @default(autoincrement())
+  senderId String 
+  sender   User     @relation(fields: [senderId], references: [id])
+  chatId   String
+  chat     Chat     @relation(fields: [chatId], references: [id])
+  text     String
+  date     DateTime
 }

@@ -30,20 +30,18 @@ class MailService {
   }
 
   async sendConfirmCode(to, code) {
-    await this.transporter
-      .sendMail({
-        from: process.env.SMTP_USER,
-        to,
-        subject: `Подтверждения входа ${process.env.API_URL}`,
-        text: '',
-        html: `
+    await this.transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to,
+      subject: `Подтверждения входа ${process.env.API_URL}`,
+      text: '',
+      html: `
         <div>
           <h1></h1>
           <div>Код активации: ${code}</div>
         </div>
       `,
-      })
-      .then(console.log);
+    });
   }
 }
 

@@ -60,7 +60,6 @@ class UserController {
   }
 
   async activate(req, res, next) {
-    console.log(process.env.CLIENT_URL);
     try {
       const activationLink = req.params.link;
       await userService.activate(activationLink);
@@ -96,10 +95,8 @@ class UserController {
 
   async getUser(req, res, next) {
     try {
-      const authorizationHeader = req.headers.authorization;
-      const accessToken = authorizationHeader.split(' ')[1];
-      const id = JSON.parse(atob(accessToken.split('.')[1])).id;
-      const user = await userService.getUser(id);
+      const { userId } = req.body;
+      const user = await userService.getUser(userId);
       return res.json(user);
     } catch (e) {
       next(e);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default async function getUserByToken() {
+export default async function getMessages(chatId) {
   const response = await axios({
     headers: {
       'Access-Control-Allow-Origin': 'http://localhost:5000',
@@ -9,7 +9,7 @@ export default async function getUserByToken() {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
     method: 'GET',
-    url: 'http://localhost:5000/auth-api/user',
+    url: `http://localhost:5000/auth-api/getMessages/${chatId}`,
   });
 
   return response;

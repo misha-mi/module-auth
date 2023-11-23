@@ -5,8 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../component/button/button';
 import Input from '../../component/input/input';
 import { useDispatch } from 'react-redux';
-import { setIsAuth, setUser } from '../../store/slice';
-import getUserByToken from '../../service/getUserByToken';
+import { setIsAuth, setUser } from '../../store/userSlice';
+import getUser from '../../service/getUser';
 
 const ConfirmPage = () => {
   const { handleSubmit, register } = useForm();
@@ -15,8 +15,8 @@ const ConfirmPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const getUser = () => {
-    getUserByToken()
+  const getUserById = () => {
+    getUser()
       .then((res) => dispatch(setUser(res.data)))
       .then(() => dispatch(setIsAuth(true)))
       .then(() => navigate('/users'))
@@ -33,7 +33,7 @@ const ConfirmPage = () => {
         localStorage.setItem('token', res.data.accessToken);
         dispatch(setUser(res.data.user));
       })
-      .then(getUser)
+      .then(() => getUserById(location.state.userId))
       .catch(console.log);
   };
 

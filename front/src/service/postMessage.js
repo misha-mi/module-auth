@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default async function getUser(userId) {
+export default async function postMessage(text, chatId) {
   const response = await axios({
     headers: {
       'Access-Control-Allow-Origin': 'http://localhost:5000',
@@ -9,8 +9,8 @@ export default async function getUser(userId) {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
     method: 'POST',
-    data: { userId },
-    url: 'http://localhost:5000/auth-api/user',
+    data: { text, chatId },
+    url: 'http://localhost:5000/auth-api/createMessage',
   });
 
   return response;

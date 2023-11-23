@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default async function getUser(userId) {
+export default async function getUsers() {
   const response = await axios({
     headers: {
       'Access-Control-Allow-Origin': 'http://localhost:5000',
@@ -8,9 +8,8 @@ export default async function getUser(userId) {
       'Access-Control-Allow-Credentials': 'true',
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
-    method: 'POST',
-    data: { userId },
-    url: 'http://localhost:5000/auth-api/user',
+    method: 'GET',
+    url: 'http://localhost:5000/auth-api/users',
   });
 
   return response;

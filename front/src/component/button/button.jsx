@@ -1,8 +1,8 @@
 import './button.sass';
 
-const Button = ({ text, onClick }) => {
+const Button = ({ text, onClick, disable }) => {
   return (
-    <button className="button" onClick={onClick}>
+    <button className="button" onClick={onClick} disabled={disable}>
       {text}
     </button>
   );

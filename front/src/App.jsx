@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.sass';
-import Users from './component/users/users';
+import UsersPage from './pages/users-page/users-page';
 import PrivateRoute from './HOC/private-route';
 import Nav from './component/nav/nav';
 import LoginPage from './pages/login-page/login-page';
@@ -24,7 +24,7 @@ function App() {
                 <Route path="registration" element={<RegistrationPage />} />
               </Route>
               <Route path="/" element={<PrivateRoute forAuthorized />}>
-                <Route path="users" element={<Users />} />
+                <Route path="users" element={<UsersPage />} />
                 <Route path="chats" element={<ChatsPage />} />
               </Route>
             </Routes>
