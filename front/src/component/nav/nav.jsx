@@ -22,7 +22,6 @@ const Nav = () => {
       <div className="container">
         <div className="nav__wrapper">
           <div className="nav__title">MyChat</div>
-          {isAuth ? <div className="nav__name">{name}</div> : null}
           <ul className="nav__links">
             {!isAuth ? (
               <>
@@ -35,6 +34,9 @@ const Nav = () => {
               </>
             ) : (
               <>
+                <li className="nav__link">
+                  <Link to="/files">Файлы</Link>
+                </li>
                 <li className="nav__link">
                   <Link to="/chats">Чаты</Link>
                 </li>

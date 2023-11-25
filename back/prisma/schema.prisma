@@ -23,6 +23,7 @@ model User {
   chat1          Chat[] @relation("user1")
   chat2          Chat[] @relation("user2")
   messages       Message[]
+  files          Files[]
 }
 
 model Token {
@@ -47,11 +48,23 @@ model Chat {
 }
 
 model Message {
-  id       Int   @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   senderId String 
   sender   User     @relation(fields: [senderId], references: [id])
   chatId   String
   chat     Chat     @relation(fields: [chatId], references: [id])
-  text     String
+  text     String   @db.Text
   date     DateTime
+}
+
+model Files {
+  id          String @id @default(uuid())
+  name        String @db.Text
+  type        String 
+  access_link String @db.Text
+  size        Int?
+  path        String @db.Text
+  userId      String 
+  user        User   @relation(fields: [userId], references: [id])
+  parent_id   String?
 }

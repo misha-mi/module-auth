@@ -8,6 +8,7 @@ import ConfirmPage from './pages/confirm-page/confirm-page';
 import RegistrationPage from './pages/registration-page/registration-page';
 import ActivatePage from './pages/activate-page/activate-page';
 import ChatsPage from './pages/chats-page/chats-page';
+import FilesPage from './pages/files-page/files-page';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Route path="/" element={<PrivateRoute forAuthorized={true} />}>
                 <Route path="/" element={<UsersPage />} />
                 <Route path="chats" element={<ChatsPage />} />
+                <Route path="/files" element={<FilesPage />} />
               </Route>
               <Route path="/" element={<PrivateRoute />}>
                 <Route path="activate" element={<ActivatePage />} />
