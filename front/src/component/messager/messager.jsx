@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import io from 'socket.io-client';
 import { pushMessage, setMessages } from '../../store/chatsSlice';
 import getMessages from '../../service/getMessages';
+import { setIsAuth } from '../../store/userSlice';
 
 const socket = io.connect('http://localhost:5000');
 
@@ -59,7 +60,9 @@ const Messager = () => {
   });
 
   const handlerSend = ({ text }) => {
-    postMessage(text, id).then(console.log).catch(console.log);
+    postMessage(text, id)
+      .then(console.log)
+      .catch(() => dispatch(setIsAuth(false)));
     socket.emit('sendMessage', { text, userId });
     dispatch(pushMessage({ text, senderId: authUserId })); // Пяткой писал? + настрой длину сообщения в Prisma
   };
@@ -73,20 +76,6 @@ const Messager = () => {
         ) : (
           <div className="messager__empty">Чат пустой</div>
         )}
-        {/* <Message text={'Some textSome textSome textSome textSome text'} time={'10.06.2022'} />
-        <Message text={'Some text'} time={'10.06.2022'} />
-        <Message text={'Some text'} time={'10.06.2022'} positionRight />
-        <Message text={'Some text'} time={'10.06.2022'} />
-        <Message text={'Some text'} time={'10.06.2022'} />
-        <Message text={'Some text Some textSome textSome t'} time={'10.06.2022'} positionRight />
-        <Message text={'Some text'} time={'10.06.2022'} positionRight />
-        <Message text={'Some text'} time={'10.06.2022'} positionRight />
-        <Message text={'Some text'} time={'10.06.2022'} />
-        <Message text={'Some text'} time={'10.06.2022'} />
-        <Message text={'Some text'} time={'10.06.2022'} />
-        <Message text={'Some text'} time={'10.06.2022'} />
-        <Message text={'Some text'} time={'10.06.2022'} positionRight />
-        <Message text={'Some text'} time={'10.06.2022'} /> */}
       </div>
       <div className="messager__input">
         <Input placeholder={'Введите сообщение'} register={register('text')} />

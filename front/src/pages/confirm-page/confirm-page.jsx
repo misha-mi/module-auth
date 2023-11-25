@@ -19,7 +19,7 @@ const ConfirmPage = () => {
     getUser()
       .then((res) => dispatch(setUser(res.data)))
       .then(() => dispatch(setIsAuth(true)))
-      .then(() => navigate('/users'))
+      .then(() => navigate('/'))
       .catch(() => dispatch(setIsAuth(false)));
   };
 

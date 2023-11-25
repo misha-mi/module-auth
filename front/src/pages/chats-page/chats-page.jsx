@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import getChats from '../../service/getChats';
 import { useDispatch, useSelector } from 'react-redux';
 import { setOpenChat, setChats } from '../../store/chatsSlice';
+import { setIsAuth } from '../../store/userSlice';
 
 const ChatsPage = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const ChatsPage = () => {
         }
       }) // захер slice то создал?
       .then(() => setLoadingChats(false))
-      .catch(console.log);
+      .catch(() => dispatch(setIsAuth(false)));
   }, []);
 
   const handlerChooseChat = (chatData) => {

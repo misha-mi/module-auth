@@ -17,15 +17,15 @@ function App() {
           <Nav />
           <div className="app__routes">
             <Routes>
+              <Route path="/" element={<PrivateRoute forAuthorized={true} />}>
+                <Route path="/" element={<UsersPage />} />
+                <Route path="chats" element={<ChatsPage />} />
+              </Route>
               <Route path="/" element={<PrivateRoute />}>
                 <Route path="activate" element={<ActivatePage />} />
                 <Route path="confirm" element={<ConfirmPage />} />
                 <Route path="login" element={<LoginPage />} />
                 <Route path="registration" element={<RegistrationPage />} />
-              </Route>
-              <Route path="/" element={<PrivateRoute forAuthorized />}>
-                <Route path="users" element={<UsersPage />} />
-                <Route path="chats" element={<ChatsPage />} />
               </Route>
             </Routes>
           </div>

@@ -13,11 +13,16 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const prisma = new PrismaClient();
 const server = createServer(app);
-const io = new Server(server, { cors: 'http://localhost:3000' });
+const io = new Server(server, { cors: 'http://localhost:3000', credentials: true });
 
-app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(express.json());
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:3000',
+  }),
+);
 app.use('/auth-api', router);
 app.use(errorMiddleware);
 
@@ -53,7 +58,6 @@ io.on('connection', (socket) => {
 const start = async () => {
   try {
     await prisma.$connect();
-    // app.listen(PORT, () => console.log(`Сервер запущен на PORT = ${PORT}`));
     server.listen(PORT, () => {
       console.log(`Сервер запущен на PORT = ${PORT}`);
     });

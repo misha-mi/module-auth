@@ -52,6 +52,7 @@ class UserController {
     try {
       const { refreshToken } = req.cookies;
       const token = await userService.logout(refreshToken);
+      console.log(refreshToken, token);
       res.clearCookie('refreshToken');
       return res.json(token); // ИСПРАВИТЬ, НЕ НАДО ВОЗВРАЩАТЬ ТОКЕН
     } catch (e) {
@@ -72,6 +73,7 @@ class UserController {
   async refresh(req, res, next) {
     try {
       const { refreshToken } = req.cookies;
+      console.log(refreshToken);
       const token = await userService.refresh(refreshToken);
       res.cookie('refreshToken', token.refreshToken, {
         // + флаг secure

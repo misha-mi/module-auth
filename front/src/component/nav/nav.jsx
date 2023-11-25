@@ -12,6 +12,7 @@ const Nav = () => {
 
   const onLogout = () =>
     postLogout()
+      .then(() => localStorage.removeItem('token'))
       .then(() => dispatch(logout()))
       .then(() => navigate('/login'))
       .catch(console.log);
@@ -38,7 +39,7 @@ const Nav = () => {
                   <Link to="/chats">Чаты</Link>
                 </li>
                 <li className="nav__link">
-                  <Link to="/users">Все пользователи</Link>
+                  <Link to="/">Все пользователи</Link>
                 </li>
                 <li className="nav__link">
                   <Link to="/my-profile">Мой профиль</Link>
