@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const { PrismaClient } = require('@prisma/client');
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const router = require('./router/index');
@@ -15,6 +16,7 @@ const prisma = new PrismaClient();
 const server = createServer(app);
 const io = new Server(server, { cors: 'http://localhost:3000', credentials: true });
 
+app.use(fileUpload({ defCharset: 'utf8', defParamCharset: 'utf8' }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(

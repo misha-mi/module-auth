@@ -28,4 +28,7 @@ router.get('/getMessages/:chatId', authMiddleware, messageController.getMessages
 
 router.post('/createDir', authMiddleware, filesConroller.createDir);
 router.get('/getFiles/:parent', authMiddleware, filesConroller.findFiles);
+router.post('/uploadFile', authMiddleware, filesConroller.uploadFile);
+router.get('/downloadFile/:id', authMiddleware, filesConroller.downloadFile);
+router.delete('/deleteFile/:id', authMiddleware, filesConroller.deleteFile);
 module.exports = router;

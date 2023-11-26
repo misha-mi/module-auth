@@ -6,12 +6,14 @@ import { useEffect, useState } from 'react';
 import getFiles from '../../service/getFiles';
 import createFolder from '../../service/createFolder';
 import Popup from '../../component/popup/popup';
+import axios from 'axios';
 
 const FilesPage = () => {
   const [files, setFiles] = useState([]);
   const [stack, setStack] = useState(['root']);
   const [path, setPath] = useState(['root']);
   const [isOpen, setIsOpen] = useState(false);
+  const [file, setFile] = useState();
 
   useEffect(() => {
     getFiles('root')
@@ -46,6 +48,30 @@ const FilesPage = () => {
       .catch(console.log);
   };
 
+  const onPushFile = async () => {
+    const formData = new FormData();
+    formData.append('file', file[0]);
+    formData.append('parent', stack[stack.length - 1]);
+    const response = await axios.post('http://localhost:5000/auth-api/uploadFile', formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent) => {
+        console.log(progressEvent);
+        const totalLength = progressEvent.event.lengthComputable
+          ? progressEvent.event.total
+          : progressEvent.event.target.getResponseHeader('content-length') ||
+            progressEvent.event.target.getResponseHeader('x-decompressed-content-length');
+        console.log('total', totalLength);
+        if (totalLength) {
+          let progress = Math.round((progressEvent.loaded * 100) / totalLength);
+          console.log(progress);
+        }
+      },
+    });
+  };
+
   return (
     <div className="filesPage">
       <div className="container">
@@ -61,14 +87,21 @@ const FilesPage = () => {
             <Button text={'Создать папку'} onClick={() => setIsOpen(true)} />
           </div>
           <div className="filesPage_w150">
-            <Button text={'Добавить файл'} />
+            <input type="file" onChange={(event) => setFile(event.target.files)} />
+            <button onClick={onPushFile}>push</button>
           </div>
         </div>
         <div className="filesPage__path">{path.join('/')}</div>
         <div className="filesPage__wrapper">
           {files.map((item) => (
-            <div key={item.id} onClick={() => handlerOpenFolder(item.id, item.name)}>
-              <FilesItem type={item.type} name={item.name} date={'20.06.2000'} />
+            <div key={item.id}>
+              <FilesItem
+                type={item.type}
+                name={item.name}
+                date={'20.06.2000'}
+                id={item.id}
+                openFolder={() => handlerOpenFolder(item.id, item.name)}
+              />
             </div>
           ))}
         </div>
