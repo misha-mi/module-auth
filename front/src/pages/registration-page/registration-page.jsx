@@ -24,6 +24,8 @@ const RegistrationPage = () => {
       <Title title={'Регистрация'} />
       <form className="registration__form">
         <Input register={register('name')} placeholder={'name'} />
+        <Input register={register('patronymic')} placeholder={'patronymic'} />
+        <Input register={register('surname')} placeholder={'surname'} />
         <Input register={register('email')} placeholder={'email'} />
         <Input register={register('password')} placeholder={'password'} />
         {error ? <div className="login__error">{error}</div> : null}

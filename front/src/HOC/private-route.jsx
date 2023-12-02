@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import getUser from '../service/getUser';
-import { setUser, setIsAuth } from '../store/userSlice';
+import { setUser, setIsAuth } from '../store/slice/userSlice';
 import refresh from '../service/refresh';
 
 // Надо написать на бэк isValid;
 
-const PrivateRoute = ({ forAuthorized }) => {
+const PrivateRoute = ({ forAuthorized, forAdmin }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const isAuth = useSelector((state) => state.user.isAuth);

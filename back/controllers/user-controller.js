@@ -6,18 +6,47 @@ class UserController {
   async registration(req, res, next) {
     try {
       const errorsValidation = validationResult(req);
-      console.log(errorsValidation, 'nt', errorsValidation.isEmpty());
       if (!errorsValidation.isEmpty()) {
         return next(ApiError.BadRequest('Ошибка при валидации', errorsValidation.array()));
       }
-      const { email, password, name } = req.body;
-      const userData = await userService.registraion(email, password, name);
-      res.cookie('refreshToken', userData.refreshToken, {
-        // + флаг secure
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      return res.json(userData);
+      const { email, password, name, surname, patronymic } = req.body;
+      const result = await userService.registraion(
+        email,
+        password,
+        name,
+        surname,
+        patronymic,
+        'student',
+      );
+      return res.json('success');
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async registraionTeacher(req, res, next) {
+    try {
+      console.log(req.user.role);
+      if (req.user.role !== 'admin') {
+        return next(ApiError.ForbiddenError());
+      }
+      const errorsValidation = validationResult(req);
+      if (!errorsValidation.isEmpty()) {
+        return next(ApiError.BadRequest('Ошибка при валидации', errorsValidation.array()));
+      }
+      if (req.user.role !== 'admin') {
+        return next(ApiError.ForbiddenError());
+      }
+      const { email, password, name, surname, patronymic } = req.body;
+      const result = await userService.registraion(
+        email,
+        password,
+        name,
+        surname,
+        patronymic,
+        'teacher',
+      );
+      return res.json(result);
     } catch (e) {
       next(e);
     }
@@ -85,9 +114,9 @@ class UserController {
     }
   }
 
-  async getUsers(req, res, next) {
+  async getAllTeachers(req, res, next) {
     try {
-      const users = await userService.getAllUsers();
+      const users = await userService.getAllTeachers();
       return res.json(users);
     } catch (e) {
       next(e);

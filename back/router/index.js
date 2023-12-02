@@ -11,14 +11,27 @@ router.post(
   '/registration',
   body('email').isEmail(),
   body('password').isLength({ min: 3, max: 32 }),
+  body('name').isString(),
+  body('surname').isString(),
+  body('patronymic').isString(),
   userController.registration,
+);
+router.post(
+  '/registrationTeacher',
+  authMiddleware,
+  body('email').isEmail(),
+  body('password').isLength({ min: 3, max: 32 }),
+  body('name').isString(),
+  body('surname').isString(),
+  body('patronymic').isString(),
+  userController.registraionTeacher,
 );
 router.post('/login', userController.login);
 router.post('/confirm', userController.confirmAccess);
 router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh); // не протестирована
-router.get('/users', authMiddleware, userController.getUsers);
+router.get('/teachers', authMiddleware, userController.getAllTeachers);
 router.post('/user', authMiddleware, userController.getUser);
 
 router.post('/findChat', authMiddleware, chatController.findChat);

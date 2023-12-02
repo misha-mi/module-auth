@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './nav.sass';
 import { Link, useNavigate } from 'react-router-dom';
 import postLogout from '../../service/postLogout';
-import { logout } from '../../store/userSlice';
+import { logout } from '../../store/slice/userSlice';
 
 const Nav = () => {
   const name = useSelector((state) => state.user.user.name);

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './userSlice.js';
-import chatsReducer from './chatsSlice.js';
+import userReducer from './slice/userSlice.js';
+import chatsReducer from './slice/chatsSlice.js';
 
 export default configureStore({
   devTools: true,

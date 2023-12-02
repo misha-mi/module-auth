@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../component/button/button';
 import Input from '../../component/input/input';
 import { useDispatch } from 'react-redux';
-import { setIsAuth, setUser } from '../../store/userSlice';
+import { setIsAuth, setUser } from '../../store/slice/userSlice';
 import getUser from '../../service/getUser';
 
 const ConfirmPage = () => {

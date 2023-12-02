@@ -7,9 +7,9 @@ import postMessage from '../../service/postMessage';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import io from 'socket.io-client';
-import { pushMessage, setMessages } from '../../store/chatsSlice';
+import { pushMessage, setMessages } from '../../store/slice/chatsSlice';
 import getMessages from '../../service/getMessages';
-import { setIsAuth } from '../../store/userSlice';
+import { setIsAuth } from '../../store/slice/userSlice';
 
 const socket = io.connect('http://localhost:5000');
 

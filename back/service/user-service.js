@@ -9,7 +9,7 @@ const ApiError = require('../exceptions/api-error');
 const client = new PrismaClient();
 
 class UserService {
-  async registraion(email, password, name) {
+  async registraion(email, password, name, surname, patronymic, role) {
     const condidate = await client.user.findFirst({ where: { email } });
     if (condidate) {
       throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует!`);
@@ -17,21 +17,29 @@ class UserService {
     const hashPassword = await bcrypt.hash(password, 3); // вытащить соль в .env
     const activationLink = uuid.v4();
 
-    const user = await client.user.create({
-      data: { email, password: hashPassword, activationLink, name },
+    let user = await client.user.create({
+      data: { email, password: hashPassword, activationLink, role },
     });
+
+    if (role === 'student') {
+      await client.student.create({
+        data: { email, name, surname, patronymic, userId: user.id },
+      });
+    } else if (role === 'teacher') {
+      user = await client.teacher.create({
+        data: { email, name, surname, patronymic, userId: user.id },
+      });
+    }
+
     await mailService.sendActivateionMail(
       email,
       `${process.env.API_URL}/auth-api/activate/${activationLink}`,
     );
 
-    const userDto = new UserDto(user);
     // const tokens = tokenService.generateTokens({ ...userDto });
 
     // await tokenService.saveToken(userDto.id, tokens.refreshToken);
-    return {
-      user: userDto,
-    };
+    return user;
   }
 
   async activate(activationLink) {
@@ -60,7 +68,9 @@ class UserService {
     }
 
     const randomCode = Math.round(Math.random() * (999999 - 100001) + 100000);
-    const confirmData = await client.confirmCode.create({ data: { confirmCode: randomCode } });
+    const confirmData = await client.confirmCode.create({
+      data: { confirmCode: randomCode, userId: user.id },
+    });
     await mailService.sendConfirmCode(user.email, randomCode);
 
     return {
@@ -129,8 +139,8 @@ class UserService {
     };
   }
 
-  async getAllUsers() {
-    const users = await client.user.findMany();
+  async getAllTeachers() {
+    const users = await client.teacher.findMany();
     return users;
   }
 

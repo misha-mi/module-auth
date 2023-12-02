@@ -16,15 +16,46 @@ model User {
   id             String  @id @default(uuid())
   email          String  @unique
   password       String
-  name           String
   isActivated    Boolean @default(false)
   activationLink String
+  role           String
   token          Token?
+  confirmCode    ConfirmCode?
+  teacher        Teacher?
+  student        Student?
   chat1          Chat[] @relation("user1")
   chat2          Chat[] @relation("user2")
   messages       Message[]
   files          Files[]
 }
+
+model Teacher {
+  id             String  @id @default(uuid())
+  userId         String  @unique    
+  name           String
+  surname        String
+  patronymic     String
+  positions      Json?
+  email          String?  @unique
+  tell           String?
+  avatar         String?
+  user           User    @relation(fields: [userId], references: [id])
+}
+
+model Student {
+  id             String  @id @default(uuid())
+  userId         String  @unique    
+  name           String
+  surname        String
+  patronymic     String
+  group          String?
+  direction      String?
+  email          String?  @unique
+  tell           String?
+  avatar         String?
+  user           User    @relation(fields: [userId], references: [id])
+}
+
 
 model Token {
   id           Int     @id @default(autoincrement())
@@ -35,7 +66,9 @@ model Token {
 
 model ConfirmCode {
   id          String @id @default(uuid())
+  userId      String @unique
   confirmCode Int 
+  user        User   @relation(fields: [userId], references: [id])
 }
 
 model Chat {
@@ -67,4 +100,5 @@ model Files {
   userId      String 
   user        User   @relation(fields: [userId], references: [id])
   parent_id   String?
+  date        DateTime
 }

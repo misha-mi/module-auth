@@ -17,8 +17,13 @@ const User = ({ id, name }) => {
   return (
     <div className="user">
       <img src={noPhoto} alt="avatar" className="user__photo" />
-      <div className="user__name">{name}</div>
+      <p className="user__name">{name}</p>
       <Button text={'Перейти к чату'} onClick={handlerFindChat} disable={id === authUserID} />
+      <Button
+        text={'Посмотреть профиль'}
+        onClick={() => navigate(`/profile/${id}`)}
+        disable={id === authUserID}
+      />
     </div>
   );
 };

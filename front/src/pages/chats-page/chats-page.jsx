@@ -5,8 +5,8 @@ import Title from '../../component/title/title';
 import { useEffect, useState } from 'react';
 import getChats from '../../service/getChats';
 import { useDispatch, useSelector } from 'react-redux';
-import { setOpenChat, setChats } from '../../store/chatsSlice';
-import { setIsAuth } from '../../store/userSlice';
+import { setOpenChat, setChats } from '../../store/slice/chatsSlice';
+import { setIsAuth } from '../../store/slice/userSlice';
 
 const ChatsPage = () => {
   const dispatch = useDispatch();
